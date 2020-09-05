@@ -3,14 +3,15 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/go-redis/redis"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/go-redis/redis"
 )
 
-func HandleMain(w http.ResponseWriter, r *http.Request)  {
+func HandleMain(w http.ResponseWriter, r *http.Request) {
 	//start := time.Now()
 	if _, ok := r.URL.Query()["username"]; !ok {
 		SetResponseJSON(w, http.StatusBadRequest, "", 0, "Required username ")
@@ -46,8 +47,8 @@ func HandleMain(w http.ResponseWriter, r *http.Request)  {
 		}
 
 		res := len(followers)
-		SetResponseJSON(w, http.StatusOK,"GITHUBAPI", res, "none")
-		err = RedisClient.Set(username, res, 60 * time.Second).Err()
+		SetResponseJSON(w, http.StatusOK, "GITHUBAPI", res, "none")
+		err = RedisClient.Set(username, res, 60*time.Second).Err()
 		if err != nil {
 			w.Write([]byte(`{"message":"error when save data to redis"}`))
 			return
@@ -55,7 +56,7 @@ func HandleMain(w http.ResponseWriter, r *http.Request)  {
 		return
 	}
 	res, _ := strconv.Atoi(val)
-	SetResponseJSON(w, http.StatusOK,"REDIS", res, "none")
+	SetResponseJSON(w, http.StatusOK, "REDIS", res, "none")
 	return
 
 	//elapsed := time.Since(start).Seconds()
